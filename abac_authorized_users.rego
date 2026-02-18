@@ -19,6 +19,8 @@ abac_authorized_users[user] := roles if {
 
         user_resource_pairs := abac.matching_users_and_resources_set with input as customize_input
         roles := { { "user": user, "role":user_resource_pair.user, "resource" : user_resource_pair.resource , "tenant" : input.resource.tenant} |
-            some user_resource_pair in user_resource_pairs }
+            some user_resource_pair in user_resource_pairs
+            abac.is_allowing_pair(user_resource_pair.user, user_resource_pair.resource)
+        }
         count(roles) > 0
 }
